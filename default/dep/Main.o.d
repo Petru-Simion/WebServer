@@ -19,7 +19,7 @@ Main.o: ../Main.c c:/winavr-20071221/bin/../avr/include/util/delay.h \
   ../Keyboard.h ../SetClock.h ../BarGraph.h ../usart.h ../lowlevel.h \
   ../enc28j60.h ../ip_arp_udp_tcp.h \
   c:/winavr-20071221/bin/../avr/include/avr/pgmspace.h ../net.h \
-  ../webserver.h
+  ../webserver.h ../TypeConversion.h
 
 c:/winavr-20071221/bin/../avr/include/util/delay.h:
 
@@ -86,3 +86,5 @@ c:/winavr-20071221/bin/../avr/include/avr/pgmspace.h:
 ../net.h:
 
 ../webserver.h:
+
+../TypeConversion.h:

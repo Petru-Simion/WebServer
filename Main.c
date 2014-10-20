@@ -24,10 +24,13 @@
 #include "ip_arp_udp_tcp.h"
 #include "net.h"
 #include "webserver.h"
+#include "TypeConversion.h"
 
 static char key;
 static int LDR;
 static char ReceivedData;
+
+
 
 /***********************/
 // Main Program
@@ -45,12 +48,12 @@ int main (void)
 	timer1_init();
 
    // LAN init
-   InitPhy();		//??
+   InitPhy();		
+   extInterruptInit();
 
 	while(1)
-	{  
-	  // Printwebpage, linkpage not called in the main, or in the Lantask
-	  // No function is calling them
+	{ 
+
  	  if (int28j60)
       {
          int28j60 = false;
@@ -118,7 +121,7 @@ int main (void)
 
      if (USART_TX_run)
       { 
-         usart_putstr(LDR_string);
+         usart_putstr(intToString(getLDR()));
          USART_TX_run = false;
       }
 
@@ -129,3 +132,4 @@ int main (void)
       }
    }
 }
+

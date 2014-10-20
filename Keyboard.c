@@ -8,11 +8,12 @@
 
 void rows_init()
 {  
-   DDRD &= 0b10000111;   //set rows as input
+/* DDRD &= 0b10000111;   //set rows as input
    PORTD |= 0b11111000;  // pull up resistors
    DDRB |= 0b10000111;   // set columns as output
    PORTB &= 0b11111000;  // set colummns low
    _delay_us(1);
+*/
 }
 
 /*****************************/
@@ -21,11 +22,13 @@ void rows_init()
 
 void col_init()
 {
+/*
    DDRB &= 0b11111000;   //set columns as input
    PORTB |= 0b10000111;  // pull up resistors
    DDRD |= 0b11111000;   // set rows as output
    PORTD &= 0b10000111;  // set rows low
    _delay_us(1);
+*/
 }
 
 /************************************/

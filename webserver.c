@@ -1,18 +1,14 @@
 #include <avr/io.h>
 #include <string.h>
 #include <stdio.h>
-
 #include <stdlib.h>
 #include "lowlevel.h"
 #include "enc28j60.h"
 #include "ip_arp_udp_tcp.h"
 #include "net.h"
-//#include "webserver.h"	used in the erik's code
-
-// "send" and "linkpage" changed to "int" - using 0s and 1s instead of false/true
-
-//void InitPhy (void);		//?????
-//void LanTask (void);			
+#include "Interrupts.h"			// For number of interrupt
+#include "ADC.h"				// For light & temp
+#include "TypeConversion.h"		//sprintf conversion
 
 static uint8_t mymac[6] = {0x54,0x55,0x58,0x10,0x00,0x24};  
 static uint8_t myip[4] = {192,168,0,50};	//changed last value
@@ -25,7 +21,6 @@ static uint8_t buf[BUFFER_SIZE+1];
 uint16_t PrintLinkpage (uint8_t *buf)
 {
    uint16_t plen;
-
    plen = Fill_tcp_data_p(buf,0,PSTR("HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n"));
    plen = Fill_tcp_data_p(buf,plen,PSTR("<center><h1>Links to other webservers in third semester ET<hr>"));
    plen = Fill_tcp_data_p(buf,plen,PSTR("<a href=\"http://192.168.0.30\">Group 1: Hasse, Mike, Mikkel & Mohib </a><hr>"));
@@ -39,17 +34,26 @@ uint16_t PrintLinkpage (uint8_t *buf)
 
 //**************************************************************************************
 uint16_t PrintWebpage (uint8_t *buf)
-{	//<center><p><h1>
-	// if you don't want it to be allinged to center write : </center>
-   uint16_t plen;
+{	
+	uint16_t plen;
+
+   //Write/Publish to the webserver
    plen = Fill_tcp_data_p(buf,0,PSTR("HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n"));
    plen = Fill_tcp_data_p(buf,plen,PSTR("<center><p><h1>"));
    plen = Fill_tcp_data_p(buf,plen,PSTR("<TITLE>KEA_EWS</TITLE><hr>"));
    plen = Fill_tcp_data_p(buf,plen,PSTR("<font color=\"blue\">Group 3 - Members: Osvaldas, Baldur, Petru and Bo<hr>"));
    plen = Fill_tcp_data_p(buf,plen,PSTR("<A HREF=\"http://192.168.0.50\">Reload</A><hr>"));
    plen = Fill_tcp_data_p(buf,plen,PSTR("<A HREF=\"http://192.168.0.50/M\">Menu</A><hr>"));
-   plen = Fill_tcp_data_p(buf,plen,PSTR("Temperature:<hr>"));
-   plen = Fill_tcp_data_p(buf,plen,PSTR("LDR values:"));
+   
+   //Sending sensor + interrrupts data
+   plen = Fill_tcp_data_p(buf,plen,PSTR("Temperature:"));
+   plen = Fill_tcp_data(buf,plen,intToString(getTempNatural()));
+   plen = Fill_tcp_data_p(buf,plen,PSTR("."));
+   plen = Fill_tcp_data(buf,plen,intToString(getTempFractional()));
+   plen = Fill_tcp_data_p(buf,plen,PSTR("<hr>Interrupts from LAN:"));
+   plen = Fill_tcp_data(buf,plen,intToString(isrCount));
+   plen = Fill_tcp_data_p(buf,plen,PSTR("<hr>LDR values:"));
+   plen = Fill_tcp_data(buf,plen,intToString(getLDR()));
 
    return(plen);
 }

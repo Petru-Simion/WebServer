@@ -35,7 +35,7 @@ HEX_EEPROM_FLAGS += --change-section-lma .eeprom=0 --no-change-warnings
 
 
 ## Objects that must be built in order to link
-OBJECTS = Main.o LCD.o Keyboard.o ADC.o Interrupts.o clock.o LCD_fixed_text.o SetClock.o ChangeTemp.o BarGraph.o usart.o enc28j60.o ip_arp_udp_tcp.o lowlevel.o webserver.o 
+OBJECTS = Main.o LCD.o Keyboard.o ADC.o Interrupts.o clock.o LCD_fixed_text.o SetClock.o ChangeTemp.o BarGraph.o usart.o enc28j60.o ip_arp_udp_tcp.o lowlevel.o webserver.o TypeConversion.o 
 
 ## Objects explicitly added by the user
 LINKONLYOBJECTS = 
@@ -87,6 +87,9 @@ lowlevel.o: ../lowlevel.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 webserver.o: ../webserver.c
+	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
+
+TypeConversion.o: ../TypeConversion.c
 	$(CC) $(INCLUDES) $(CFLAGS) -c  $<
 
 ##Link

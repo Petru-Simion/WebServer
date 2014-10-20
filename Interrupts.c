@@ -18,6 +18,7 @@
 #define LCD_bars_interval 200;
 #define USART_RX_interval 50;
 #define USART_TX_interval 100;
+#define webserver_interval 20;
 
 // RTOS timer variables: 
 
@@ -75,6 +76,14 @@ void timer1_init()
 	sei();
 }
 
+void extInterruptInit()
+{
+	//Initialize the external interrupt (INT0)
+	GICR |= 0x40;
+	MCUCR = 0x02;
+	MCUCSR = 0x00;
+	GIFR = 0x40;
+}
 // External timer
 ISR(INT0_vect)
 {

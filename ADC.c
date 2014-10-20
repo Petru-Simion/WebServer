@@ -8,10 +8,11 @@
 #include "ChangeTemp.h"
 #include "BarGraph.h"
 
+int adc_light;
 int adc_temp, n, i;
 int temp_array[10]= {};
 long avg_temp ;
-char int_buff2[10], int_buff[10];
+char fractional_string[10], natural_string[10];
 int natural_temp = 0, frac_temp = 0;
 char LDR_string[10];
 
@@ -100,15 +101,15 @@ void celsius ()
 
    // Calculate and print the natural part of the number
    natural_temp = cel/100; 
-   itoa(natural_temp, int_buff,10);
+   itoa(natural_temp, natural_string,10);
    LCD_goto(13,1);
-   LCD_str(int_buff);
+   LCD_str(natural_string);
 
    // Calculate and print fractional part of the number
    frac_temp= cel%100; 
-   itoa (frac_temp, int_buff2,10); 
+   itoa (frac_temp, fractional_string,10); 
    LCD_goto (16,1);
-   LCD_str(int_buff2);
+   LCD_str(fractional_string);
 
    LCD_goto(19,1);
    LCD_str("C");
@@ -132,15 +133,15 @@ void fahrenheit ()
 
    // Calculate and print natural part:
    natural_temp = fahr/100;
-   itoa(natural_temp, int_buff,10);    
+   itoa(natural_temp, natural_string,10);    
    LCD_goto(13,1);
-   LCD_str(int_buff);
+   LCD_str(natural_string);
 
    // Calculate and print fractional part:
    frac_temp= fahr%100;    
-   itoa (frac_temp, int_buff2,10); 
+   itoa (frac_temp, fractional_string,10); 
    LCD_goto (16,1);
-   LCD_str(int_buff2);
+   LCD_str(fractional_string);
 
    LCD_goto(19,1);
    LCD_str("F");
@@ -153,7 +154,6 @@ void fahrenheit ()
 
 int light (void)
 { 
-   int adc_light;
   // char LDR_string[10];  
    char lead_1[2] = "0";
    char lead_2[3] = "00";
@@ -194,3 +194,17 @@ int light (void)
    return adc_light;
 }
 
+int getLDR ()
+{	
+	return adc_light;
+}
+
+int getTempNatural()
+{
+	return natural_temp;
+}
+
+int getTempFractional()
+{
+	return frac_temp;
+}

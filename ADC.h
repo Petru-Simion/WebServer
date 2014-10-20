@@ -7,6 +7,8 @@ extern int ADC_init (int channel);
 extern int light (void);
 extern void temp (void);
 extern int ADC_init (int channel);
-extern char LDR_str();
-extern char LDR_string[10];
+extern int getLDR ();
+extern int getTempNatural();
+extern int getTempFractional();
+
 #endif

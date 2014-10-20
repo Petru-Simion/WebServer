@@ -138,7 +138,3 @@ ISR (USART_TXC_vect)
 		}
 	TxComplete = true;
 }
-
-//ISR (USART_UDRE_vect)
-//{
-//}
