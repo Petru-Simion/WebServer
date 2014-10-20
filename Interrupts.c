@@ -19,6 +19,7 @@
 #define USART_RX_interval 50;
 #define USART_TX_interval 100;
 #define webserver_interval 20;
+#define TimeTask_interval 995;
 
 // RTOS timer variables: 
 
@@ -57,6 +58,9 @@ int USART_RX_count;
 int int28j60 = false;
 uint16_t isrCount = 0;
 
+int TimeTask_run;
+int TimeTask_count;
+
 // Initialize timer, interrupt and variable
 void timer1_init()
 {   
@@ -76,14 +80,15 @@ void timer1_init()
 	sei();
 }
 
+//Initialize the external interrupt (INT0)
 void extInterruptInit()
 {
-	//Initialize the external interrupt (INT0)
 	GICR |= 0x40;
 	MCUCR = 0x02;
 	MCUCSR = 0x00;
 	GIFR = 0x40;
 }
+
 // External timer
 ISR(INT0_vect)
 {
@@ -151,4 +156,10 @@ ISR (TIMER1_COMPA_vect)
       USART_TX_count = USART_TX_interval;
       USART_TX_run = true;
    }        
+   
+   if(TimeTask_count-- == 0)
+   {
+   	  TimeTask_count = TimeTask_interval;
+	  TimeTask_run = true;
+   }
 }

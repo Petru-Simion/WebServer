@@ -53,7 +53,6 @@ int main (void)
 
 	while(1)
 	{ 
-
  	  if (int28j60)
       {
          int28j60 = false;
@@ -130,6 +129,12 @@ int main (void)
 		 ReceivedData = usart_rx();
          USART_RX_run = false;
       }
+	  
+	  if(TimeTask_run)
+	  {
+	  	 TimeTask_run = false;
+		 TimeTask();
+	  }	
    }
 }
 

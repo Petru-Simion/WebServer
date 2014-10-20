@@ -6,16 +6,20 @@
 #include "enc28j60.h"
 #include "ip_arp_udp_tcp.h"
 #include "net.h"
-#include "Interrupts.h"			// For number of interrupt
-#include "ADC.h"				// For light & temp
-#include "TypeConversion.h"		//sprintf conversion
+#include "Interrupts.h"			// Receive the number of interrupts
+#include "ADC.h"				// Receive the light & temp values
+#include "TypeConversion.h"		// Make the int->string conversion
 
 static uint8_t mymac[6] = {0x54,0x55,0x58,0x10,0x00,0x24};  
-static uint8_t myip[4] = {192,168,0,50};	//changed last value
-static uint16_t mywwwport = 80; // listen port for tcp/www (max range 1-254)
+static uint8_t myip[4] = {192,168,0,50};		//Customized the last values
+static uint16_t mywwwport = 80; 		// listen port for tcp/www (max range 1-254)
 
-#define BUFFER_SIZE 1000
+#define BUFFER_SIZE 1700			// Modified from 1000 to 1700
 static uint8_t buf[BUFFER_SIZE+1];
+char timeString[40];
+
+//Protoype - if necessary for the timer function
+//void TimeTask(void);
 
 //**************************************************************************************
 uint16_t PrintLinkpage (uint8_t *buf)
@@ -37,7 +41,7 @@ uint16_t PrintWebpage (uint8_t *buf)
 {	
 	uint16_t plen;
 
-   //Write/Publish to the webserver
+   //Write to the webserver
    plen = Fill_tcp_data_p(buf,0,PSTR("HTTP/1.0 200 OK\r\nContent-Type: text/html\r\n\r\n"));
    plen = Fill_tcp_data_p(buf,plen,PSTR("<center><p><h1>"));
    plen = Fill_tcp_data_p(buf,plen,PSTR("<TITLE>KEA_EWS</TITLE><hr>"));
@@ -45,17 +49,52 @@ uint16_t PrintWebpage (uint8_t *buf)
    plen = Fill_tcp_data_p(buf,plen,PSTR("<A HREF=\"http://192.168.0.50\">Reload</A><hr>"));
    plen = Fill_tcp_data_p(buf,plen,PSTR("<A HREF=\"http://192.168.0.50/M\">Menu</A><hr>"));
    
-   //Sending sensor + interrrupts data
+   //Send the sensors data 
    plen = Fill_tcp_data_p(buf,plen,PSTR("Temperature:"));
    plen = Fill_tcp_data(buf,plen,intToString(getTempNatural()));
    plen = Fill_tcp_data_p(buf,plen,PSTR("."));
    plen = Fill_tcp_data(buf,plen,intToString(getTempFractional()));
-   plen = Fill_tcp_data_p(buf,plen,PSTR("<hr>Interrupts from LAN:"));
-   plen = Fill_tcp_data(buf,plen,intToString(isrCount));
+   
    plen = Fill_tcp_data_p(buf,plen,PSTR("<hr>LDR values:"));
    plen = Fill_tcp_data(buf,plen,intToString(getLDR()));
 
+   //Timer started when running the program + number of LAN interrupts 
+   plen = Fill_tcp_data_p(buf,plen,PSTR("<hr>Time since running the program:"));
+   plen = Fill_tcp_data  (buf, plen, timeString);
+   plen = Fill_tcp_data_p(buf,plen,PSTR("<hr>Interrupts from LAN:"));
+   plen = Fill_tcp_data(buf,plen,intToString(isrCount));
+
+   // Receive a command from the webserver
+   plen = Fill_tcp_data_p(buf,plen,PSTR("<a href=\"http://192.168.0.50/B\">Toogle Backlight</a><hr>"));
+
    return(plen);
+}
+
+//**************************************************************************************
+void TimeTask (void)  
+{
+   static uint8_t sec = 0, min = 0, hour = 0;
+
+   sec++;
+   if (sec > 59)
+   {
+      sec = 0;
+      min++;
+      if (min > 59)
+      {
+         min = 0;
+         hour++;
+      }
+   }
+   sprintf(timeString, "Time since reset: %d:%02d:%02d\r\n", hour, min, sec);
+}
+
+//**************************************************************************************
+uint8_t GetCommand (char *x)
+{
+   if (strncmp("/ ", x, 2) == 0) return 0;
+   if (strncmp("/B", x, 2) == 0) return 1;
+   return 0;
 }
 
 //**************************************************************************************
@@ -95,16 +134,6 @@ void InitPhy (void)
      
    //init the ethernet/ip layer:
    Init_ip_arp_udp_tcp(mymac,myip,80);
-}
-
-//**************************************************************************************
-uint8_t GetCommand (char *x)
-{
-   if (strncmp("/ ", x, 2) == 0) return 0;
-   if (strncmp("/D", x, 2) == 0) return 1;
-   if (strncmp("/U", x, 2) == 0) return 2;
-   if (strncmp("/M", x, 2) == 0) return 3;
-   return 0;
 }
 
 //*****************************************************************************
