@@ -53,7 +53,9 @@ uint16_t PrintWebpage (uint8_t *buf)
    plen = Fill_tcp_data_p(buf,plen,PSTR("<hr>Interrupts from LAN:"));
    plen = Fill_tcp_data(buf,plen,intToString(isrCount));
    plen = Fill_tcp_data_p(buf,plen,PSTR("<hr>LDR values:"));
-   plen = Fill_tcp_data(buf,plen,intToString(getLDR()));
+   
+   plen = Fill_tcp_data_p(buf,plen,PSTR("<hr>Time since reset:"));
+   plen = Fill_tcp_data(buf,plen,intToString(time_count));
 
    return(plen);
 }
