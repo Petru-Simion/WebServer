@@ -19,9 +19,9 @@
 #define USART_RX_interval 50;
 #define USART_TX_interval 100;
 #define webserver_interval 20;
-#define WebTimer_interval 995;
 
-// RTOS timer variables
+// RTOS timer variables: 
+
 int clock_run;
 int clock_count;
 
@@ -56,9 +56,6 @@ int USART_RX_count;
 //LAN
 int int28j60 = false;
 uint16_t isrCount = 0;
-
-int WebTimer_run;
-int WebTimer_count;
 
 // Initialize timer, interrupt and variable
 void timer1_init()
@@ -153,11 +150,5 @@ ISR (TIMER1_COMPA_vect)
    {
       USART_TX_count = USART_TX_interval;
       USART_TX_run = true;
-   }     
-   
-   if(WebTimer_count-- == 0)
-   {
-   	  WebTimer_count = WebTimer_interval;
-	  WebTimer_run = true;
-   }   
+   }        
 }

@@ -16,7 +16,6 @@ extern int USART_TX_run;
 extern int int28j60;
 extern int webserver_run;
 extern int isrCount;
-extern int WebTimer_run;
 
 #endif
 

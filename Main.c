@@ -29,7 +29,8 @@
 static char key;
 static int LDR;
 static char ReceivedData;
-int time_count;
+
+
 
 /***********************/
 // Main Program
@@ -52,11 +53,6 @@ int main (void)
 
 	while(1)
 	{ 
-	  if(WebTimer_run)
-	  {
-	    time_count ++;
-	  	WebTimer_run = false;
-	  }
 
  	  if (int28j60)
       {

@@ -190,7 +190,7 @@ Disassembly of section .text:
      3b6:	0c 94 6c 1c 	jmp	0x38d8	; 0x38d8 <_exit>
 
 000003ba <__bad_interrupt>:
-     3ba:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+     3ba:	0c 94 00 00 	jmp	0	; 0x0 <__heap_end>
 
 000003be <main>:
      3be:	0e 94 6f 04 	call	0x8de	; 0x8de <LCD_init>
