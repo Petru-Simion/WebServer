@@ -59,17 +59,17 @@ uint16_t PrintWebpage (uint8_t *buf)
    plen = Fill_tcp_data(buf,plen,intToString(getLDR()));
 
    //Timer started when running the program + number of LAN interrupts 
-   plen = Fill_tcp_data_p(buf,plen,PSTR("<hr>Time since running the program:"));
-   plen = Fill_tcp_data  (buf, plen, timeString);
+  // plen = Fill_tcp_data_p(buf,plen,PSTR("<hr>Time since running the program:"));
+   //plen = Fill_tcp_data  (buf, plen, timeString);
    plen = Fill_tcp_data_p(buf,plen,PSTR("<hr>Interrupts from LAN:"));
    plen = Fill_tcp_data(buf,plen,intToString(isrCount));
 
    // Receive a command from the webserver
-   plen = Fill_tcp_data_p(buf,plen,PSTR("<a href=\"http://192.168.0.50/B\">Toogle Backlight</a><hr>"));
+   //plen = Fill_tcp_data_p(buf,plen,PSTR("<a href=\"http://192.168.0.50/B\">Toogle Backlight</a><hr>"));
 
    return(plen);
 }
-
+/*
 //**************************************************************************************
 void TimeTask (void)  
 {
@@ -88,7 +88,7 @@ void TimeTask (void)
    }
    sprintf(timeString, "Time since reset: %d:%02d:%02d\r\n", hour, min, sec);
 }
-
+*/
 //**************************************************************************************
 uint8_t GetCommand (char *x)
 {

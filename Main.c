@@ -130,11 +130,12 @@ int main (void)
          USART_RX_run = false;
       }
 	  
-	  if(TimeTask_run)
+	 /* if(TimeTask_run)
 	  {
 	  	 TimeTask_run = false;
 		 TimeTask();
-	  }	
+	  }
+	  */	
    }
 }
 
